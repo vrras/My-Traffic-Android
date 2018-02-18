@@ -2,7 +2,7 @@ var connection = require('../config/mysql-db');
 
 // add query functions
 function getAllData(req, res, next) {
-    var queryData = 'SELECT a.*, b.full_name, b.flag FROM (SELECT * FROM location GROUP BY id_user DESC) a INNER JOIN users b ON a.id_user=b.id_user ';
+    var queryData = 'SELECT * FROM (SELECT a.*, b.full_name, b.flag FROM location_log a INNER JOIN users b ON a.id_user=b.id_user GROUP BY a.id_user, insert_date ORDER BY insert_date DESC) t GROUP BY id_user';
 
     connection.query(queryData, function(err, rows, fields){
         if (!err && (rows.length > 0)) 
@@ -103,7 +103,7 @@ function createDataLog(req, res, next) {
             res.json({
                 status:true,
                 code:201,
-                msg:rows.affectedRows + ' record(s) inserted.'
+                msg:row.affectedRows + ' record(s) inserted.'
             });
         } 
         else 

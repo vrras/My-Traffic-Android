@@ -5,6 +5,7 @@ var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
     password : '',
+    port: 3306,
     database : 'delivery_db',
     timezone : '+07.00' 
   });

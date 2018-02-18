@@ -10,6 +10,7 @@ var helmet = require('helmet');
 var api = require('./config/MyConstants');
 //ROUTES
 var location = require('./routes/location');
+var user = require('./routes/users');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(api.loc, location);
+app.use(api.user, user);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
