@@ -5,6 +5,7 @@ var controller = require('../controllers/location');
 
 router.get('/', controller.getAllData);
 router.post('/one', controller.getSingleData);
+router.post('/oneloc', controller.getSingleDataLoc);
 router.post('/', controller.createData);
 router.post('/log', controller.createDataLog);
 router.put('/', controller.updateData);
