@@ -27,7 +27,7 @@ function getAllData(req, res, next) {
 
 function getSingleData(req, res, next) {
     var id=req.body.id_user;
-    queryData='SELECT * FROM location_log WHERE id_user=?';
+    queryData='SELECT * FROM location WHERE id_user=?';
 
     connection.query(queryData, id, function(err, rows, fields) {
         if (!err && (rows.length === 1)) 
@@ -46,6 +46,53 @@ function getSingleData(req, res, next) {
                 msg:'Data not found.'
             });
             console.log(err);
+        }
+    });
+}
+
+function getSingleDataLoc(req, res, next) {
+    var id=req.body.id_user;
+    var lat=req.body.lat;
+    var lng=req.body.lng;
+
+    var data = {
+        latitude: lat,
+        longitude: lng
+    }
+
+    var datai = {
+        latitude: lat,
+        longitude: lng,
+        id_user: id
+    }
+
+    queryData='SELECT * FROM location WHERE id_user=?';
+
+    connection.query(queryData, id, function(err, rows, fields) {
+        if (!err && (rows.length === 1)) 
+        {
+
+            queryData='UPDATE location SET ? WHERE id_user = ?';
+
+            connection.query(queryData, [data,id], function(err, rows, fields) {
+                res.json({
+                    status:true,
+                    code:200,
+                    msg:rows.affectedRows + ' record(s) updated.'
+                });
+            });
+
+        } else {
+
+            queryData='INSERT INTO location SET ?';
+
+            connection.query(queryData, [datai], function(err, rows, fields) {
+                res.json({
+                    status:true,
+                    code:200,
+                    msg:rows.affectedRows + ' record(s) inserted.'
+                });
+            });
         }
     });
 }
@@ -119,20 +166,19 @@ function createDataLog(req, res, next) {
 }
 
 function updateData(req, res, next) {
-    var id = parseInt(req.body.id_loc);
+    // var id = parseInt(req.body.id_loc);
     var lat = req.body.lat;
     var lng = req.body.lng;
     var id_user = req.body.id_user;
 
     var data = {
         latitude: lat,
-        longitude: lng,
-        id_user: id_user
+        longitude: lng
     }
 
-    var queryData = 'UPDATE location SET ? WHERE id_loc = ?';
+    var queryData = 'UPDATE location SET ? WHERE id_user = ?';
     
-    connection.query(queryData, [data,id], function(err, rows, fields) {
+    connection.query(queryData, [data,id_user], function(err, rows, fields) {
         if (!err) 
         {
             res.json({
@@ -186,5 +232,6 @@ module.exports = {
     createData: createData,
     createDataLog: createDataLog,
     updateData: updateData,
-    removeData: removeData
+    removeData: removeData,
+    getSingleDataLoc: getSingleDataLoc
 };
